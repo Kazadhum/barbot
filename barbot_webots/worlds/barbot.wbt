@@ -14,7 +14,7 @@ WorldInfo {
 }
 Viewpoint {
   orientation -0.1528275034271339 0.052396772249014595 0.9868628741897805 2.148982019339448
-  position 1.3390758549548245 -1.4944421846161051 0.7658451604969028
+  position 1.3475503002539022 -1.48518207598711 0.7774397957477629
 }
 TexturedBackground {
 }
@@ -22,6 +22,9 @@ TexturedBackgroundLight {
 }
 RectangleArena {
   floorSize 10 10
+}
+DEF WORLD_DUMMY Solid {
+  name "world_dummy"
 }
 Robot {
   translation 0 0.25 0.06
@@ -71,6 +74,7 @@ Robot {
       ]
     }
   ]
+  name "base_link"
   physics Physics {
   }
   controller "ros"

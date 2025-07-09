@@ -9,7 +9,7 @@ from webots_ros.srv._node_add_force_or_torque import node_add_force_or_torque
 from webots_ros.srv._node_get_pose import node_get_pose
 from webots_ros.srv._node_get_velocity import node_get_velocity
 from webots_ros.srv._node_set_velocity import node_set_velocity
-from webots_ros.srv._set_int import set_int
+from webots_ros.srv._supervisor_get_from_def import supervisor_get_from_def
 
 
 class RobotController:
@@ -23,17 +23,13 @@ class RobotController:
             "/supervisor/node/add_force",
             "/supervisor/node/add_torque",
             "/supervisor/node/get_pose",
+            "/supervisor/get_from_def",
         ]
 
         # Also wait for getBasicTimeStep service
         services_to_wait_for.append("/robot/get_basic_time_step")
         # Additional services
         services_to_wait_for.append("/robot/get_time")
-
-        # sensors = ["accelerometer", "gyro"]
-
-        # for sensor in sensors:
-            # services_to_wait_for.append(f"/{sensor}/enable")
 
         for srv in services_to_wait_for:
             rospy.wait_for_service(service=srv)
@@ -46,9 +42,15 @@ class RobotController:
             name="/supervisor/get_self", service_class=get_uint64
         )
 
+        supervisor_get_from_def_srv = rospy.ServiceProxy(
+            name="/supervisor/get_from_def", service_class=supervisor_get_from_def
+        )
+
         self.supervisor_node = int(supervisor_get_self_srv().value)
 
         self.basic_time_step = int(robot_get_basic_time_step_srv().value)
+
+        self.world_node = supervisor_get_from_def_srv(name="WORLD_DUMMY", proto=0).node
 
         self.srv_proxy_dict = {
             "add_torque": rospy.ServiceProxy(
@@ -69,14 +71,11 @@ class RobotController:
                 name="/supervisor/node/set_velocity", service_class=node_set_velocity
             ),
         }
-        # for sensor in sensors:
-        #     self.srv_proxy_dict[f"{sensor}_enable"] = rospy.ServiceProxy(
-        #         name=f"/{sensor}/enable", service_class=set_int
-        #     )
 
-    # def enable_imu(self):
-    #     for sensor in ["accelerometer", "gyro"]:
-    #         self.srv_proxy_dict[f"{sensor}_enable"](value=self.basic_time_step)
+    def get_pose(self):
+        return self.srv_proxy_dict["get_pose"](
+            node=self.world_node, from_node=self.supervisor_node
+        ).pose
 
     def add_torque(self, torque: list):
 
