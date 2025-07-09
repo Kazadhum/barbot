@@ -1,0 +1,83 @@
+#VRML_SIM R2023a utf8
+
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023a/projects/objects/backgrounds/protos/TexturedBackground.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023a/projects/objects/backgrounds/protos/TexturedBackgroundLight.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023a/projects/objects/floors/protos/RectangleArena.proto"
+
+WorldInfo {
+  gravity 0
+  basicTimeStep 4
+  contactProperties [
+    ContactProperties {
+    }
+  ]
+}
+Viewpoint {
+  orientation -0.1528275034271339 0.052396772249014595 0.9868628741897805 2.148982019339448
+  position 1.3390758549548245 -1.4944421846161051 0.7658451604969028
+}
+TexturedBackground {
+}
+TexturedBackgroundLight {
+}
+RectangleArena {
+  floorSize 10 10
+}
+Robot {
+  translation 0 0.25 0.06
+  children [
+    Transform {
+      children [
+        Solid {
+          children [
+            Shape {
+              appearance PBRAppearance {
+                baseColor 0.333333 0.666667 1
+                metalness 0
+              }
+              geometry DEF BAR_GEOM Box {
+                size 0.3 0.1 0.1
+              }
+            }
+            Accelerometer {
+              translation 0 0 0.055
+              children [
+                Shape {
+                  appearance PBRAppearance {
+                    baseColor 1 0.333333 0
+                    metalness 0
+                  }
+                  geometry DEF ACCEL_GEOM Box {
+                    size 0.01 0.01 0.01
+                  }
+                }
+              ]
+              boundingObject USE ACCEL_GEOM
+              physics Physics {
+              }
+            }
+            Gyro {
+              translation 0 0 0.055
+              boundingObject USE ACCEL_GEOM
+              physics Physics {
+              }
+            }
+          ]
+          name "bar_link"
+          boundingObject USE BAR_GEOM
+          physics Physics {
+          }
+        }
+      ]
+    }
+  ]
+  physics Physics {
+  }
+  controller "ros"
+  controllerArgs [
+    "--use-sim-time"
+    "--clock"
+  ]
+  supervisor TRUE
+  synchronization FALSE
+}
