@@ -141,8 +141,8 @@ class RobotController:
 
             # If vels are really close to 0, break
             if (
-                np.linalg.norm(linear_vels) < 0.001
-                and np.linalg.norm(angular_vels) < 0.001
+                np.linalg.norm(linear_vels) < 0.01
+                and np.linalg.norm(angular_vels) < 0.01
             ):
                 break
             else:
