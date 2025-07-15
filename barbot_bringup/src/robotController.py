@@ -1,8 +1,11 @@
 #!/usr/bin/env python3
 
+from barbot_bringup.msg._ApplyForce import ApplyForce
+from barbot_bringup.msg._ApplyTorque import ApplyTorque
 from geometry_msgs.msg import Twist, Vector3
 import rospy
 import numpy as np
+from std_msgs.msg import Bool
 from webots_ros.srv._get_float import get_float
 from webots_ros.srv._get_uint64 import get_uint64
 from webots_ros.srv._node_add_force_or_torque import node_add_force_or_torque
@@ -72,28 +75,46 @@ class RobotController:
             ),
         }
 
+        self.apply_force_pub = rospy.Publisher(
+            name="/apply_force", data_class=ApplyForce, queue_size=10, latch=True
+        )
+        self.apply_torque_pub = rospy.Publisher(
+            name="/apply_torque", data_class=ApplyTorque, queue_size=10, latch=True
+        )
+        self.apply_slow_stop_pub = rospy.Publisher(
+            name="/apply_slow_stop", data_class=Bool, queue_size=10, latch=True
+        )
+
     def get_pose(self):
         return self.srv_proxy_dict["get_pose"](
             node=self.world_node, from_node=self.supervisor_node
         ).pose
 
-    def add_torque(self, torque: list):
+    def add_torque(self, torque: list, duration: float):
 
-        torque_vec = Vector3()
-        torque_vec.x, torque_vec.y, torque_vec.z = torque
+        msg = ApplyTorque()
+        msg.duration = duration
+        msg.torque = Vector3()
+        msg.torque.x, msg.torque.y, msg.torque.z = torque
 
-        self.srv_proxy_dict["add_torque"](
-            node=self.supervisor_node, force=torque_vec, relative=0
-        )
+        self.apply_torque_pub.publish(msg)
 
-    def add_force(self, force: list):
+        # self.srv_proxy_dict["add_torque"](
+        #     node=self.supervisor_node, force=torque_vec, relative=0
+        # )
 
-        force_vec = Vector3()
-        force_vec.x, force_vec.y, force_vec.z = force
+    def add_force(self, force: list, duration: float):
 
-        self.srv_proxy_dict["add_force"](
-            node=self.supervisor_node, force=force_vec, relative=0
-        )
+        msg = ApplyForce()
+        msg.duration = duration
+        msg.force = Vector3()
+        msg.force.x, msg.force.y, msg.force.z = force
+
+        self.apply_force_pub.publish(msg)
+
+        # self.srv_proxy_dict["add_force"](
+        #     node=self.supervisor_node, force=force_vec, relative=0
+        # )
 
     def get_velocity(self):
         vel = self.srv_proxy_dict["get_velocity"](node=self.supervisor_node).velocity
@@ -116,38 +137,6 @@ class RobotController:
         self.set_velocity(linear=[0] * 3, angular=[0] * 3)
 
     def slow_stop(self):
+        msg = Bool(data=True)
+        self.apply_slow_stop_pub.publish(msg)
 
-        # First, slow the robot to as close to 0 as possible
-        while True:
-            # Get velocities first
-            vels = self.get_velocity()
-
-            linear_vels = [vels.linear.x, vels.linear.y, vels.linear.z]
-            angular_vels = [vels.angular.x, vels.angular.y, vels.angular.z]
-
-            frc: list[float] = [0.0] * 3
-            trq: list[float] = [0.0] * 3
-            for idx in range(3):
-                # apply negative force if speed is positive and vice-versa
-                if linear_vels[idx] > 0:
-                    frc[idx] = -0.5
-                elif linear_vels[idx] < 0:
-                    frc[idx] = 0.5
-
-                if angular_vels[idx] > 0:
-                    trq[idx] = -0.3
-                elif angular_vels[idx] < 0:
-                    trq[idx] = 0.3
-
-            # If vels are really close to 0, break
-            if (
-                np.linalg.norm(linear_vels) < 0.01
-                and np.linalg.norm(angular_vels) < 0.01
-            ):
-                break
-            else:
-                self.add_force(force=frc)
-                self.add_torque(torque=trq)
-
-        # Ensure null velocity
-        self.stop_robot()

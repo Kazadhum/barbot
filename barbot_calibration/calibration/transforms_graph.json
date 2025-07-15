@@ -1,0 +1,107 @@
+{
+  "directed": true,
+  "graph": {},
+  "links": [
+    {
+      "child": "bar_link",
+      "from_bag": false,
+      "is_transformation_calibrated": false,
+      "joint_name": "base_link_bar_link_joint",
+      "joint_params_calibrated": null,
+      "parent": "base_link",
+      "source": "base_link",
+      "target": "bar_link",
+      "type": "fixed",
+      "weight": 1
+    },
+    {
+      "child": "gyro",
+      "from_bag": false,
+      "is_transformation_calibrated": false,
+      "joint_name": "bar_link_gyro_joint",
+      "joint_params_calibrated": null,
+      "parent": "bar_link",
+      "source": "bar_link",
+      "target": "gyro",
+      "type": "fixed",
+      "weight": 1
+    },
+    {
+      "child": "accelerometer",
+      "from_bag": false,
+      "is_transformation_calibrated": true,
+      "joint_name": "bar_link_accelerometer_joint",
+      "joint_params_calibrated": null,
+      "parent": "bar_link",
+      "source": "bar_link",
+      "target": "accelerometer",
+      "type": "fixed",
+      "weight": 1
+    },
+    {
+      "child": "pattern_link",
+      "from_bag": false,
+      "is_transformation_calibrated": true,
+      "joint_name": null,
+      "joint_params_calibrated": null,
+      "parent": "world",
+      "source": "world",
+      "target": "pattern_link",
+      "type": "fixed",
+      "weight": 1
+    },
+    {
+      "child": "base_link",
+      "from_bag": true,
+      "is_transformation_calibrated": false,
+      "parent": "world",
+      "source": "world",
+      "target": "base_link",
+      "type": "multiple",
+      "weight": 1
+    }
+  ],
+  "multigraph": false,
+  "nodes": [
+    {
+      "from_bag": false,
+      "id": "base_link",
+      "is_world": false,
+      "pattern": null,
+      "sensor_data": null
+    },
+    {
+      "from_bag": false,
+      "id": "bar_link",
+      "is_world": false,
+      "pattern": null,
+      "sensor_data": null
+    },
+    {
+      "from_bag": false,
+      "id": "gyro",
+      "is_world": false,
+      "pattern": null,
+      "sensor_data": null
+    },
+    {
+      "from_bag": false,
+      "id": "accelerometer",
+      "is_world": false,
+      "pattern": null,
+      "sensor_data": "imu_chassis"
+    },
+    {
+      "id": "pattern_link",
+      "is_world": false,
+      "pattern": "pattern_1",
+      "sensor_data": null
+    },
+    {
+      "id": "world",
+      "is_world": true,
+      "pattern": null,
+      "sensor_data": null
+    }
+  ]
+}

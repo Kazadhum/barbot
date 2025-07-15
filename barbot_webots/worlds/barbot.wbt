@@ -14,7 +14,7 @@ WorldInfo {
 }
 Viewpoint {
   orientation -0.1528275034271339 0.052396772249014595 0.9868628741897805 2.148982019339448
-  position 1.3475503002539022 -1.48518207598711 0.7774397957477629
+  position 0.49302688404484146 -0.5124867901602331 0.1926420337216556
 }
 TexturedBackground {
 }
@@ -26,7 +26,7 @@ RectangleArena {
 DEF WORLD_DUMMY Solid {
   name "world_dummy"
 }
-Robot {
+DEF BARBOT Robot {
   translation 0 0.25 0.06
   children [
     Transform {
@@ -84,4 +84,14 @@ Robot {
   ]
   supervisor TRUE
   synchronization FALSE
+}
+Robot {
+  name "supervisor_force_torque_applier"
+  controller "supervisor_force_torque_applier"
+  supervisor TRUE
+}
+Robot {
+  name "world_base_link_tf_pub"
+  controller "world_base_link_tf_pub"
+  supervisor TRUE
 }

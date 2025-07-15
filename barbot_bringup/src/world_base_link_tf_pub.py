@@ -12,7 +12,7 @@ def main():
 
     br = tf.TransformBroadcaster()
 
-    rate = rospy.Rate(hz=100)
+    rate = rospy.Rate(hz=20)
 
     while not rospy.is_shutdown():
         robot_pose = controller.get_pose()
@@ -36,7 +36,7 @@ def main():
             rotation=quat,
             time=rospy.Time.now(),
             child="base_link",
-            parent="world"
+            parent="world",
         )
 
         rate.sleep()
