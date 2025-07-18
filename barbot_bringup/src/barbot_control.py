@@ -49,11 +49,11 @@ def main():
     rospy.sleep(duration=5)
 
     # Spin
-    controller.add_torque(torque=[0.1, -0.1, 0.05], duration=3)
-    rospy.sleep(duration=3)
-    controller.slow_stop()
+    # controller.add_torque(torque=[0.1, -0.1, 0.05], duration=3)
+    # rospy.sleep(duration=3)
+    # controller.slow_stop()
+    # rospy.sleep(duration=5)
 
-    rospy.sleep(duration=5)
 
     for axis in range(3):
         frc = [0.0]*3
@@ -64,15 +64,26 @@ def main():
         controller.slow_stop()
         rospy.sleep(5)
 
+        frc[axis] = -0.5
+        controller.add_force(force=frc, duration=3)
+        rospy.sleep(duration=3)
+        controller.slow_stop()
+        rospy.sleep(5)
+
     for axis in range(3):
         trq = [0.0]*3
-        trq[axis] = 0.3
+        trq[axis] = 0.2
 
         controller.add_torque(torque=trq, duration=3)
         rospy.sleep(duration=3)
         controller.slow_stop()
         rospy.sleep(duration=5)
 
+        trq[axis] = -0.2
+        controller.add_torque(torque=trq, duration=3)
+        rospy.sleep(duration=3)
+        controller.slow_stop()
+        rospy.sleep(duration=5)
 
     # controller.slow_stop()
 

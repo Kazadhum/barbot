@@ -6,7 +6,7 @@ EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023a/project
 
 WorldInfo {
   gravity 0
-  basicTimeStep 4
+  basicTimeStep 16
   contactProperties [
     ContactProperties {
     }
@@ -14,7 +14,7 @@ WorldInfo {
 }
 Viewpoint {
   orientation -0.1528275034271339 0.052396772249014595 0.9868628741897805 2.148982019339448
-  position 0.49302688404484146 -0.5124867901602331 0.1926420337216556
+  position 0.7821266505255913 -0.9736043284227125 0.3496144868131102
 }
 TexturedBackground {
 }

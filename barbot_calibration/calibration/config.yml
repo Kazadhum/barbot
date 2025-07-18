@@ -35,7 +35,7 @@
 description_file: "package://barbot_description/urdf/barbot.urdf"
 
 # The calibration framework requires a bagfile to extract the necessary data for the calibration.
-bag_file: "$ROS_BAGS/barbot/data1.bag"
+bag_file: "$ROS_BAGS/barbot/data_simple.bag"
 
 # You must define a frame of reference for the optimization process.
 # It must exist in the transformation chains of all the sensors which are being calibrated.
